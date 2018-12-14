@@ -67,7 +67,7 @@ public class UserService {
 	}
 	
 	@GET
-	@Path("/getTopFive/{input}")
+	@Path("/getTopFive/{input}") //this is the only one used in index!
 	@Produces(MediaType.APPLICATION_ATOM_XML)
 	public String getTopFive(@PathParam("input") String input) {
 		
