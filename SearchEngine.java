@@ -23,6 +23,7 @@ public class SearchEngine {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public boolean query(String value) {
 		
 		if(value.isEmpty()) //controll so input is not emty
@@ -35,8 +36,7 @@ public class SearchEngine {
 			
 			if(spider.realWord(w)) {
 				for(listElement E : results) {
-					scores.addConScore(frequencyMetric(spider.getPage(E.getURL()), w));
-					scores.addLocScore(locationMetric(spider.getPage(E.getURL()), w));
+					scores.addElement(E.getURL(), frequencyMetric(spider.getPage(E.getURL()), w), locationMetric(spider.getPage(E.getURL()), w));
 				}
 			}else
 				counter++;
@@ -47,19 +47,24 @@ public class SearchEngine {
 		
 		scores.normalize();
 		
-		for(int w = 0; w < words.length;w++) {
-			for(int i = w * results.size(); i < (w + 1) * results.size();i++) {
-				results.get(i - (w * results.size())).addScore(scores.getCon(i) + 0.8 * scores.getLoc(i));
-			}
+		for(listElement p : results) {
+			p.addScore(scores.getCon(scores.getIndexOfURL(p.getURL())) + (0.8 * scores.getLoc(scores.getIndexOfURL(p.getURL()))));
+			//System.out.print(p.getURL() + "	");
+			//System.out.print(scores.getCon(scores.getIndexOfURL(p.getURL())) + "	");
+			//System.out.print((0.8 * scores.getLoc(scores.getIndexOfURL(p.getURL()))) + "	");
+			//System.out.println(scores.getCon(scores.getIndexOfURL(p.getURL())) + (0.8 * scores.getLoc(scores.getIndexOfURL(p.getURL()))));
 		}
-		
+		System.out.println();
 		Collections.sort(results);
 		
 		return true;
 	}
 	
 	private double frequencyMetric(Page page, String word) {
-		return page.containNumberOfWords(spider.getIdForWord(word));
+		double ret = 0;
+		if(page.getURL().toLowerCase().contains(word))
+			ret = 1.0;
+		return ret + page.containNumberOfWords(spider.getIdForWord(word));
 	}
 	
 	private double locationMetric(Page page, String word) {
@@ -67,9 +72,15 @@ public class SearchEngine {
 			wordId = spider.getIdForWord(word),
 			index = 1;
 		
+			//if(page.getURL().toLowerCase().contains(word)) {
+			//	return 1;
+				//score += index;
+				//index++;
+			//}
+		
 		for(Integer pw : page.getWords()) {
 			if(pw == wordId)
-				score += index;
+				return index;
 			index++;
 				
 		}
@@ -81,5 +92,9 @@ public class SearchEngine {
 	
 	public listElement getResultFromIndex(int index) {
 		return results.get(index);
+	}
+	
+	public score getScores() {
+		return scores;
 	}
 }

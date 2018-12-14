@@ -26,24 +26,28 @@ function search(){
 	.then((res) => res.text())
 	.then((data) => {
 		var dataPart = data.split("\n");
-		
+		//document.getElementById("SUC").innerHTML = data;
 		resetTable();
-		printParts(dataPart[8],dataPart[9]);
-		printParts(dataPart[6],dataPart[7]);
-		printParts(dataPart[4],dataPart[5]);
-		printParts(dataPart[2],dataPart[3]);
-		printParts(dataPart[0],dataPart[1]);
+		printParts(dataPart[16],dataPart[17],dataPart[18],dataPart[19]);
+		printParts(dataPart[12],dataPart[13],dataPart[14],dataPart[15]);
+		printParts(dataPart[8],dataPart[9],dataPart[10],dataPart[11]);
+		printParts(dataPart[4],dataPart[5],dataPart[6],dataPart[7]);
+		printParts(dataPart[0],dataPart[1],dataPart[2],dataPart[3]);
 	})
 }
 
-function printParts(url,score){
+function printParts(url,score,con,loc){
 	var table = document.getElementById("outTable");
 	var row = table.insertRow(1);
 	var cel1 = row.insertCell(0);
 	var cel2 = row.insertCell(1);
+	var cel3 = row.insertCell(2);
+	var cel4 = row.insertCell(3);
 	
 	printToCell(url,cel1);
 	printToCell(score,cel2);
+	printToCell(con,cel3);
+	printToCell(loc,cel4);
 }
 
 function printToCell(data,output){
@@ -51,7 +55,7 @@ function printToCell(data,output){
 }
 
 function resetTable(){
-	document.getElementById("outTable").innerHTML = "<tr><td>URL</td><td>score</td></tr>";
+	document.getElementById("outTable").innerHTML = "<tr><td>URL</td><td>Score</td><td>Content</td><td>Location</td></tr>";
 }
 </script>
 

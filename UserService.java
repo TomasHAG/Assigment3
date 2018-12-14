@@ -67,7 +67,7 @@ public class UserService {
 	}
 	
 	@GET
-	@Path("/getTopFive/{input}") //this is the only one used in index!
+	@Path("/getTopFive/{input}") //this is the one that are used in index!
 	@Produces(MediaType.APPLICATION_ATOM_XML)
 	public String getTopFive(@PathParam("input") String input) {
 		
@@ -75,12 +75,15 @@ public class UserService {
 			return "error";
 		
 		String out = "";
-		String row = "";
+		score scores = SE.getScores();
 		
+	
 		for(int i = 0; i < 5;i++) {
-			out += SE.getResultFromIndex(i).getURL() + "\n" + SE.getResultFromIndex(i).getScore() + "\n";
+			out += SE.getResultFromIndex(i).getURL() + "\n" + SE.getResultFromIndex(i).getScore() + "\n" 
+		+ scores.getCon(scores.getIndexOfURL(SE.getResultFromIndex(i).getURL())) + "\n" 
+				+ 0.8*scores.getLoc(scores.getIndexOfURL(SE.getResultFromIndex(i).getURL())) + "\n";
 		}
-		
+		//System.out.println(out);
 		return out;
 	}
    
